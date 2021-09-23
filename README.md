@@ -7,8 +7,9 @@ A Flutter Plugin to detect System proxy. When using HTTP client that are not pro
 ### Installation
 
 ```yaml
-
-flutter_system_proxy:
+dependencies:
+  ...
+  flutter_system_proxy:
     git: 
       url: https://github.com/Rushabhshroff/flutter_system_proxy.git
       ref: main
