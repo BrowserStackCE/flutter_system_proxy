@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
 Future<String> fetchLocalHost() async {
   try {
     var dio = new Dio();
-    var url = 'http://192.168.0.132:8000';
+    var url = 'http://ip-api.com/json';
     var proxy = await FlutterSystemProxy.findProxyFromEnvironment(url);
     (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
         (HttpClient client) {
