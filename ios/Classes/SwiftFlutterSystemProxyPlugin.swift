@@ -21,21 +21,12 @@ public class SwiftFlutterSystemProxyPlugin: NSObject, FlutterPlugin {
         let args = call.arguments as! NSDictionary
         let url = args.value(forKey:"url") as! String
         let host = args.value(forKey:"host") as! String
-        let PacUrl = proxyDict.value(forKey:"ProxyAutoConfigURLString") as! String
-        if let uri = URL(string: PacUrl) {
-        do {
-          let contents = try String(contentsOf: uri)
-          let jsEngine:JSContext = JSContext()
-          jsEngine.evaluateScript(contents)
-          let fn = "FindProxyForURL(\"" + url + "\",\""+host+"\")"
-          let proxy = jsEngine.evaluateScript(fn)
-          result(proxy?.toString())
-        } catch {
-          result("DIRECT")
-        }
-        } else {
-          result("DIRECT")
-        }
+        let js = args.value(forKey:"js") as! String
+        let jsEngine:JSContext = JSContext()
+        jsEngine.evaluateScript(js)
+        let fn = "FindProxyForURL(\"" + url + "\",\""+host+"\")"
+        let proxy = jsEngine.evaluateScript(fn)
+        result(proxy?.toString())
       }else{
         result("DIRECT")
       }
