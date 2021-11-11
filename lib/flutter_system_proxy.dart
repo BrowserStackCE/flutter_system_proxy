@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
 
@@ -32,7 +33,10 @@ class FlutterSystemProxy {
       return null;
     } else if (Platform.isIOS) {
       if (proxySettings["ProxyAutoConfigEnable"] == 1) {
-        return {"pacEnabled": "true"};
+        return {
+          "pacEnabled": "true",
+          "pacUrl": proxySettings['ProxyAutoConfigURLString']
+        };
       } else {
         if (isHttps) {
           if (proxySettings['HTTPSEnable'] == 1) {
@@ -65,9 +69,13 @@ class FlutterSystemProxy {
           (parsedProxy["host"] as String) +
           ":" +
           (parsedProxy["port"] as String);
-    } else if (parsedProxy != null && parsedProxy["pacEnabled"] == "true") {
-      String proxy =
-          await _channel.invokeMethod("executePAC", {"url": url, "host": host});
+    } else if (parsedProxy != null &&
+        parsedProxy["pacEnabled"] == "true" &&
+        parsedProxy["pacUrl"] != null) {
+      String pacLocation = parsedProxy["pacUrl"] as String;
+      String jsContents = await contents(pacLocation);
+      String proxy = await _channel.invokeMethod(
+          "executePAC", {"url": url, "host": host, "js": jsContents});
       return proxy;
     } else {
       return HttpClient.findProxyFromEnvironment(Uri.parse(url));
@@ -87,4 +95,16 @@ bool isPort(String? port) {
   } else {
     return false;
   }
+}
+
+Future<String> contents(String url) async {
+  HttpClient client = new HttpClient();
+  var completor = new Completer<String>();
+  client.findProxy = null;
+  var request = await client.getUrl(Uri.parse(url));
+  var response = await request.close();
+  response.transform(utf8.decoder).listen((contents) {
+    completor.complete(contents);
+  });
+  return completor.future;
 }
