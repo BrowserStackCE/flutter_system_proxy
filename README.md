@@ -11,7 +11,7 @@ dependencies:
   ...
   flutter_system_proxy:
     git: 
-      url: https://github.com/Rushabhshroff/flutter_system_proxy.git
+      url: https://github.com/BrowserStackCE/flutter_system_proxy.git
       ref: main
 
 ```
