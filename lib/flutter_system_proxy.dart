@@ -62,7 +62,6 @@ class FlutterSystemProxy {
 
   static Future<String> findProxyFromEnvironment(String url) async {
     var parsedProxy = await _getSystemProxy(url);
-    print(parsedProxy);
     var host = Uri.parse(url).host;
     if (parsedProxy != null && parsedProxy["enabled"] == "true") {
       return "PROXY " +
