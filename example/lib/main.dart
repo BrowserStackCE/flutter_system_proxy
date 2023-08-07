@@ -90,6 +90,6 @@ Future<String> fetchLocalHost() async {
     return response.toString();
   } catch (e) {
     print(e);
-    return "Error";
+    return e.toString();
   }
 }

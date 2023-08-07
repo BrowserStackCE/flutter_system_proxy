@@ -3,6 +3,10 @@ package com.browserstack.fluttersystemproxy.flutter_system_proxy;
 import androidx.annotation.NonNull;
 import android.text.TextUtils;
 
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.ProxySelector;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,12 +35,26 @@ public class FlutterSystemProxyPlugin implements FlutterPlugin, MethodCallHandle
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     if (call.method.equals("getDeviceProxy")) {
-      Map map = new HashMap<String, String>();
-      map.put("http.proxyHost", System.getProperty("http.proxyHost"));
-      map.put("http.proxyPort", System.getProperty("http.proxyPort"));
-      map.put("https.proxyHost", System.getProperty("https.proxyHost"));
-      map.put("https.proxyPort", System.getProperty("https.proxyPort"));
-      result.success(map);
+      HashMap<String, String> _map = new HashMap<String, String>() {
+        {
+          put("host", null);
+          put("port", null);
+        }
+      };
+      String url = call.argument("url");
+      ProxySelector selector = ProxySelector.getDefault();
+      try {
+        for (Proxy proxy : selector.select(new URI(url))) {
+          if (proxy.type() == Proxy.Type.HTTP) {
+            InetSocketAddress addr = (InetSocketAddress) proxy.address();
+            _map.put("host", addr.getHostName());
+            _map.put("port", Integer.toString(addr.getPort()));
+          }
+        }
+        result.success(_map);
+      } catch (Exception ex) {
+        result.error("URL Error",ex.getMessage(),null);
+      }
     } else {
       result.notImplemented();
     }
