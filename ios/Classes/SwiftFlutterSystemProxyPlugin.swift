@@ -75,8 +75,9 @@ public class SwiftFlutterSystemProxyPlugin: NSObject, FlutterPlugin {
         config.connectionProxyDictionary = [AnyHashable: Any]()
         let session = URLSession.init(configuration: config,delegate: nil,delegateQueue: OperationQueue.current)
         session.dataTask(with: URL(string: pacUrl)!, completionHandler: { data, response, error in
-            if(error != nil){
+            if(error != nil || data == nil){
                 callback(nil,error)
+                return;
             }
             pacContent = String(bytes: data!,encoding: String.Encoding.utf8)!
             callback(pacContent,nil)
