@@ -36,7 +36,7 @@ public class SwiftFlutterSystemProxyPlugin: NSObject, FlutterPlugin {
                 }
                 downloadPac(pacUrl: pacUrl!, callback: { pacContent,error in
                     
-                    if(error != nil){
+                    if(error != nil || pacContent == nil){
                         callback(nil,nil)
                     }else{
                         self.handlePacContent(pacContent: pacContent!, url: url, callback: callback)
@@ -53,7 +53,7 @@ public class SwiftFlutterSystemProxyPlugin: NSObject, FlutterPlugin {
     }
     
     func handlePacContent(pacContent: String,url: String, callback:(_ host:String?,_ port:Int?)->Void){
-        let proxies = CFNetworkCopyProxiesForAutoConfigurationScript(pacContent as CFString, CFURLCreateWithString(kCFAllocatorDefault, url as CFString, nil), nil)!.takeUnretainedValue() as? [[CFString: Any]] ?? [];
+        let proxies = CFNetworkCopyProxiesForAutoConfigurationScript(pacContent as CFString, CFURLCreateWithString(kCFAllocatorDefault, url as CFString, nil), nil)?.takeUnretainedValue() as? [[CFString: Any]] ?? [];
         if(proxies.count > 0){
             let proxy = proxies.first{$0[kCFProxyTypeKey] as! CFString == kCFProxyTypeHTTP || $0[kCFProxyTypeKey] as! CFString == kCFProxyTypeHTTPS}
             if(proxy != nil){
