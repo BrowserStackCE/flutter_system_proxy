@@ -35,8 +35,8 @@ public class SwiftFlutterSystemProxyPlugin: NSObject, FlutterPlugin {
                     self.handlePacContent(pacContent: pacContent! as String, url: url, callback: callback)
                 }
                 downloadPac(pacUrl: pacUrl!, callback: { pacContent,error in
-                    
-                    if(error != nil){
+                   
+                    if(error != nil || pacContent == nil){
                         callback(nil,nil)
                     }else{
                         self.handlePacContent(pacContent: pacContent!, url: url, callback: callback)
@@ -53,7 +53,7 @@ public class SwiftFlutterSystemProxyPlugin: NSObject, FlutterPlugin {
     }
     
     func handlePacContent(pacContent: String,url: String, callback:(_ host:String?,_ port:Int?)->Void){
-        let proxies = CFNetworkCopyProxiesForAutoConfigurationScript(pacContent as CFString, CFURLCreateWithString(kCFAllocatorDefault, url as CFString, nil), nil)!.takeUnretainedValue() as? [[CFString: Any]] ?? [];
+        let proxies = CFNetworkCopyProxiesForAutoConfigurationScript(pacContent as CFString, CFURLCreateWithString(kCFAllocatorDefault, url as CFString, nil), nil)?.takeUnretainedValue() as? [[CFString: Any]] ?? [];
         if(proxies.count > 0){
             let proxy = proxies.first{$0[kCFProxyTypeKey] as! CFString == kCFProxyTypeHTTP || $0[kCFProxyTypeKey] as! CFString == kCFProxyTypeHTTPS}
             if(proxy != nil){
@@ -75,8 +75,9 @@ public class SwiftFlutterSystemProxyPlugin: NSObject, FlutterPlugin {
         config.connectionProxyDictionary = [AnyHashable: Any]()
         let session = URLSession.init(configuration: config,delegate: nil,delegateQueue: OperationQueue.current)
         session.dataTask(with: URL(string: pacUrl)!, completionHandler: { data, response, error in
-            if(error != nil){
+            if(error != nil || data == nil){
                 callback(nil,error)
+                return;
             }
             pacContent = String(bytes: data!,encoding: String.Encoding.utf8)!
             callback(pacContent,nil)
