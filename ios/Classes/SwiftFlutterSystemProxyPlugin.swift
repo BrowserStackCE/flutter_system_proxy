@@ -35,7 +35,7 @@ public class SwiftFlutterSystemProxyPlugin: NSObject, FlutterPlugin {
                     self.handlePacContent(pacContent: pacContent! as String, url: url, callback: callback)
                 }
                 downloadPac(pacUrl: pacUrl!, callback: { pacContent,error in
-                    
+                   
                     if(error != nil || pacContent == nil){
                         callback(nil,nil)
                     }else{
