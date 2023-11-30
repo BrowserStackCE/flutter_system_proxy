@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 import 'package:dio/adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
@@ -34,10 +35,13 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   String _res = "Response";
   void _incrementCounter() {
-    fetchLocalHost().then((value) {
-      setState(() {
+    setState(() {
         _counter++;
-        _res = value;
+      });
+    fetchLocalHost().then((value) {
+      print(value);
+      setState(() {
+        _res = value.toString();
       });
     });
   }
@@ -76,10 +80,10 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 Future<String> fetchLocalHost() async {
-  try {
     var dio = new Dio();
     var url = 'http://ip-api.com/json';
     var proxy = await FlutterSystemProxy.findProxyFromEnvironment(url);
+    print(proxy);
     (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
         (HttpClient client) {
       client.findProxy = (uri) {
@@ -87,9 +91,6 @@ Future<String> fetchLocalHost() async {
       };
     };
     var response = await dio.get(url);
+    print(response.toString());
     return response.toString();
-  } catch (e) {
-    print(e);
-    return e.toString();
-  }
 }
