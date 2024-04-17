@@ -22,7 +22,7 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    namespace 'BrowserStackCE_flutter_system_proxy'
+    namespace 'com.browserstack.fluttersystemproxy.flutter_system_proxy'
     compileSdkVersion 30
 
     defaultConfig {
