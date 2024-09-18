@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:async';
 import 'package:dio/adapter.dart';
 import 'package:flutter/material.dart';
@@ -34,15 +33,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   String _res = "Response";
+
   void _incrementCounter() {
-    setState(() {
-        _counter++;
-      });
+    setState(() => _counter++);
+
     fetchLocalHost().then((value) {
-      print(value);
-      setState(() {
-        _res = value.toString();
-      });
+      if (!mounted) return;
+      setState(() => _res = value.toString());
     });
   }
 
@@ -55,17 +52,17 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: [
             Text(
               'You have pushed the button this many times:',
             ),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
             Text(
               '$_counter:$_res',
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyMedium,
             )
           ],
         ),
@@ -80,17 +77,15 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 Future<String> fetchLocalHost() async {
-    var dio = new Dio();
-    var url = 'http://ip-api.com/json';
-    var proxy = await FlutterSystemProxy.findProxyFromEnvironment(url);
-    print(proxy);
-    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-        (HttpClient client) {
-      client.findProxy = (uri) {
-        return proxy;
-      };
-    };
-    var response = await dio.get(url);
-    print(response.toString());
-    return response.toString();
+  var dio = Dio();
+  var url = 'http://ip-api.com/json';
+  var proxy = await FlutterSystemProxy.findProxyFromEnvironment(url);
+  print(proxy);
+  (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+      (client) {
+    return client..findProxy = (uri) => proxy;
+  };
+  var response = await dio.get(url);
+  print(response.toString());
+  return response.toString();
 }

@@ -87,11 +87,11 @@ public class SwiftFlutterSystemProxyPlugin: NSObject, FlutterPlugin {
         }
     }
 
-    static func handlePacUrl(pacUrl: String, url: String){
+    static func handlePacUrl(pacUrl: String, url: String) {
         var _pacUrl = CFURLCreateWithString(kCFAllocatorDefault,  pacUrl as CFString?,nil)
         var targetUrl = CFURLCreateWithString(kCFAllocatorDefault, url as CFString?, nil)
         var info = url;
-        if(pacUrl != nil && targetUrl != nil){
+        if(pacUrl != nil && targetUrl != nil) {
             var context:CFStreamClientContext = CFStreamClientContext.init(version: 0, info: &info, retain: nil, release: nil, copyDescription: nil)
             let runLoopSource = CFNetworkExecuteProxyAutoConfigurationURL(_pacUrl!,targetUrl!,  { client, proxies, error in
                 let _proxies = proxies as? [[CFString: Any]] ?? [];
@@ -110,7 +110,7 @@ public class SwiftFlutterSystemProxyPlugin: NSObject, FlutterPlugin {
                 }
             }
                 CFRunLoopStop(CFRunLoopGetCurrent());
-            }, &context).takeUnretainedValue()
+            }, &context)
             let runLoop = CFRunLoopGetCurrent();
             CFRunLoopAddSource(runLoop, runLoopSource, CFRunLoopMode.defaultMode);
             CFRunLoopRun();

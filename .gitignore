@@ -4,6 +4,9 @@
 .packages
 .pub/
 
+
+.idea/
+
 build/
 **/*.settings
 **/*.project
