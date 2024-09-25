@@ -1,6 +1,6 @@
 name: flutter_system_proxy
 description: A Flutter Plugin to detect System proxy. When using HTTP client that are not proxy aware this plugin can help with finding the proxy from system settings which then can be used with HTTP Client to make a successful request.
-version: 0.1.1
+version: 0.1.2
 homepage: https://github.com/BrowserStackCE/flutter_system_proxy.git
 
 environment:
