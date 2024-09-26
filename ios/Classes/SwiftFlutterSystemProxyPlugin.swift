@@ -51,7 +51,7 @@ public class SwiftFlutterSystemProxyPlugin: NSObject, FlutterPlugin {
                 }else if(pacUrl != nil){
                     self.handlePacUrl(pacUrl: pacUrl!,url: url)
                 }
-            } else if (proxConfigDict![kCFNetworkProxiesHTTPEnable] as! Int == 1){
+            } else if (proxConfigDict![kCFNetworkProxiesHTTPEnable] as? Int == 1){
                 var dict: [String: Any] = [:]
                 dict["host"] = proxConfigDict![kCFNetworkProxiesHTTPProxy] as? String
                 dict["port"] = proxConfigDict![kCFNetworkProxiesHTTPPort] as? Int
@@ -101,7 +101,7 @@ public class SwiftFlutterSystemProxyPlugin: NSObject, FlutterPlugin {
                 let runLoop = CFRunLoopGetCurrent();
                 CFRunLoopAddSource(runLoop, getRunLoopSource(runLoopSource), CFRunLoopMode.defaultMode);
                 CFRunLoopRun();
-                CFRunLoopRemoveSource(CFRunLoopGetCurrent(), runLoopSource, CFRunLoopMode.defaultMode);
+                CFRunLoopRemoveSource(CFRunLoopGetCurrent(), getRunLoopSource(runLoopSource), CFRunLoopMode.defaultMode);
         })
     }
     
