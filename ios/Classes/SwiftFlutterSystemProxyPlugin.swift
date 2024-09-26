@@ -105,10 +105,19 @@ public class SwiftFlutterSystemProxyPlugin: NSObject, FlutterPlugin {
                     CFRunLoopStop(CFRunLoopGetCurrent());
                 }, &context);
                 let runLoop = CFRunLoopGetCurrent();
-                CFRunLoopAddSource(runLoop, runLoopSource, CFRunLoopMode.defaultMode);
+                CFRunLoopAddSource(runLoop, getRunLoopSource(runLoopSource), CFRunLoopMode.defaultMode);
                 CFRunLoopRun();
                 CFRunLoopRemoveSource(CFRunLoopGetCurrent(), runLoopSource, CFRunLoopMode.defaultMode);
         })
+    }
+    
+    //For backward compatibility <= XCode 15
+    static func getRunLoopSource<T>(_ runLoopSource: T) -> CFRunLoopSource {
+        if let unmanagedValue = runLoopSource as? Unmanaged<CFRunLoopSource> {
+            return unmanagedValue.takeUnretainedValue()
+        } else {
+            return runLoopSource as! CFRunLoopSource
+        }
     }
     
 }
