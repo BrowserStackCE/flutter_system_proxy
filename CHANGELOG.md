@@ -1,3 +1,7 @@
+## 0.2.1
+
+* fix(android): replace removed jcenter() with mavenCentral() 
+
 ## 0.2.0
 
 * Add Swift Package Manager (SPM) support for iOS.
