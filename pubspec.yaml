@@ -1,6 +1,6 @@
 name: flutter_system_proxy
 description: A Flutter plugin to detect system proxy settings, helping non-proxy-aware HTTP clients retrieve proxy configurations for successful network requests.
-version: 0.2.1
+version: 0.2.2
 homepage: https://github.com/BrowserStackCE/flutter_system_proxy.git
 
 environment:

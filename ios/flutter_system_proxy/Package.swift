@@ -3,7 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "flutter_system_proxy",
-    platforms: [.iOS("12.0")],
+    platforms: [.iOS("13.0")],
     products: [
         .library(name: "flutter-system-proxy", targets: ["flutter_system_proxy"])
     ],

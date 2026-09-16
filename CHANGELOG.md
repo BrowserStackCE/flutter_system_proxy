@@ -1,3 +1,7 @@
+## 0.2.2
+
+* fix(ios): raise minimum iOS version to 13.0 for SPM FlutterFramework compatibility.
+
 ## 0.2.1
 
 * fix(android): replace removed jcenter() with mavenCentral() 
